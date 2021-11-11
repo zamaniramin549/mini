@@ -14,6 +14,7 @@ from miniadmin.models import *
 # Create your views here.
 
 # Here is the home
+# anothere one
 def home(request):
 
     try:
