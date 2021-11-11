@@ -1,0 +1,130 @@
+{% extends 'masteradmin.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Purchases</h1>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Categories</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>User name</th>
+                                    <th>Phone Number</th>
+                                    <th>Email</th>
+                                    <th>Date of purchase</th>
+                                    <th>Order Number</th>
+                                    <th>Amount</th>
+                                    <th>Satus</th>
+                                    <th>View details</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>User name</th>
+                                    <th>Phone Number</th>
+                                    <th>Email</th>
+                                    <th>Date of purchase</th>
+                                    <th>Order Number</th>
+                                    <th>Amount</th>
+                                    <th>Satus</th>
+                                    <th>View details</th>
+                                </tr>
+                            </tfoot>
+
+
+
+                            <tbody>
+                                {% for date_purchases in date_purchases %}
+                                    {% if date_purchases.view == 'notyet' %}
+                                        <tr>
+                                            <td class="font-weight-bold text-dark">{{forloop.counter}}</td>
+                                            <td class="text-capitalize font-weight-bold text-dark">
+                                                {% for users in users %}
+                                                    {% if users.pk == date_purchases.user_pk %}
+                                                        {{users.first_name}} {{users.last_name}}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td class="font-weight-bold text-dark">{{date_purchases.countrycode}} {{date_purchases.tell}}</td>
+                                            <td class="font-weight-bold text-dark">
+                                                {% for users in users %}
+                                                    {% if users.pk == date_purchases.user_pk %}
+                                                        {{users.email}}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            
+                                            <td class="font-weight-bold text-dark">{{date_purchases.date|naturalday}}</td>
+                                            <td class="font-weight-bold text-dark">IN-{{date_purchases.pk}}</td>
+                                            <td class="font-weight-bold text-dark">RM {{date_purchases.amount|intcomma}}</td>
+
+
+                                            {% if date_purchases.view == 'notyet' %}
+                                                <td class="font-weight-bold text-warning">Not Viewed</td>
+                                            {% else %}
+                                                <td class="font-weight-bold text-success">Viewed</td>
+                                            {% endif %}
+
+                                            <td class="font-weight-bold"><a href="{% url 'view_purchases' pk=date_purchases.pk %}">View Details</a></td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td class="">{{forloop.counter}}</td>
+                                            <td class="text-capitalize">
+                                                {% for users in users %}
+                                                    {% if users.pk == date_purchases.user_pk %}
+                                                        {{users.first_name}} {{users.last_name}}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td class="">{{date_purchases.countrycode}} {{date_purchases.tell}}</td>
+                                            <td class="">
+                                                {% for users in users %}
+                                                    {% if users.pk == date_purchases.user_pk %}
+                                                        {{users.email}}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </td>
+                                            <td class="">{{date_purchases.date|naturalday}}</td>
+                                            <td class="">IN-{{date_purchases.pk}}</td>
+                                            <td class="">RM {{date_purchases.amount|intcomma}}</td>
+
+
+                                            {% if date_purchases.view == 'notyet' %}
+                                                <td class="font-weight-bold text-warning">Not Viewed</td>
+                                            {% else %}
+                                            <td class="font-weight-bold text-success">Viewed</td>
+                                            {% endif %}
+                                            <td class=""><a href="{% url 'view_purchases' pk=date_purchases.pk %}">View Details</a></td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,139 @@
+{% extends 'masteradmin.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Products</h1>
+    </div>
+
+
+    <div class="row">
+
+        {% if product %}
+            <div class="container-fluid">
+                {% if msg %}
+                <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                    {{msg}}
+                </div>
+                {% endif %}
+                {% if msgw %}
+                <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+                    {{msgw}}
+                </div>
+                {% endif %}
+
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">All Products</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Product Name</th>
+                                        <th>Category</th>
+                                        <th>Description</th>
+                                        <th>Price (RM)</th>
+                                        <th>Date</th>
+                                        <th>Stuck</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Product Name</th>
+                                        <th>Category</th>
+                                        <th>Description</th>
+                                        <th>Price (RM)</th>
+                                        <th>Date</th>
+                                        <th>Stuck</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for product in product %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td class="text-capitalize">{{product.product_name}}</td>
+                                        <td class="text-capitalize">
+                                            {% for cat in cat %}
+                                                {% if cat.pk == product.cat %}
+                                                    {{cat.cat_name}}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </td>
+                                        <td>{{product.description|truncatechars:20}}</td>
+                                        <td>{{product.price}}</td>
+                                        <td>{{product.date|naturalday}}</td>
+                                        <td>
+                                            <form method="POST" class="row">{% csrf_token %}
+                                                <div class="col-5">
+                                                    <input type="number" name="get_stuck" min="1" class="form-control" value="{{product.stuck}}">
+                                                    <input type="hidden" name="stuck_pk" value="{{product.pk}}">
+                                                </div>
+                                                <div class="col-6">
+                                                    <button class="btn btn-success btn-sm" type="submit" name="add_on">Add to Stuck</button>
+                                                </div>
+                                            </form>                                    
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{% url 'edit_pro' pk=product.pk %}" class="btn btn-info btn-circle btn-sm">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
+
+
+
+
+                                            <a href="#" class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#deleteModal{{product.pk}}">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                            <!-- Delete -->
+                                            <div class="modal fade" id="deleteModal{{product.pk}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="POST" class="modal-content">{% csrf_token %}
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-capitalize" id="exampleModalLabel">Delete {{product.product_name}}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                            <div class="modal-body">
+                                                                Are you sure want to delete the product?
+                                                                <input type="hidden" value="{{product.pk}}" name="pro_pk_del">
+                                                            </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-danger" name="del_pro">Delete</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+       {% else %}
+        <div class="col-md-12">
+                <div class="alert alert-dark" role="alert">
+                    You haven't added any products yet.
+                    Please <a href="/addproduct">Click here</a> to add product.
+                </div>
+        </div>
+       {% endif %}
+
+
+
+    </div>
+</div>
+
+{% endblock %}

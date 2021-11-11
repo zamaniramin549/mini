@@ -1,0 +1,43 @@
+{% load static %}
+<!-- Topbar -->
+<div class="top-bar">
+    <div class="content-topbar flex-sb-m h-full container">
+        <div class="left-top-bar">
+            Mini Hair Care 
+        </div>
+
+        <div class="right-top-bar flex-w h-full">
+            <a href="/Q&A" class="flex-c-m trans-04 p-lr-25">
+                Q&A
+            </a>
+
+            {% if not request.user.is_authenticated %}
+                <a href="/loginuser" class="flex-c-m trans-04 p-lr-25">
+                    Login or Register
+                </a>
+            {% else %}
+                <a href="/phistory" class="flex-c-m trans-04 p-lr-25">
+                    {{request.user.first_name}} {{request.user.last_name}}
+                </a>
+
+                {% if user_info.permission == 'superuser' %}
+                <a href="/adminpanel" class="flex-c-m trans-04 p-lr-25">
+                    Adminpanel
+                </a>
+                {% endif %}
+
+                <a href="/logoutuser" class="flex-c-m trans-04 p-lr-25">
+                    Log out
+                </a>
+            {% endif %}
+
+            <a href="#" class="flex-c-m trans-04 p-lr-25">
+                EN
+            </a>
+
+            <a href="#" class="flex-c-m trans-04 p-lr-25">
+                MY
+            </a>
+        </div>
+    </div>
+</div>

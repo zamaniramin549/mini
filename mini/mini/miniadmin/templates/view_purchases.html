@@ -1,0 +1,80 @@
+{% extends 'masteradmin.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">{{user.first_name}} {{user.last_name}} purchases</h1>
+    </div>
+
+
+    <div class="row">
+
+       
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                        {{user.first_name}} {{user.last_name}}<br/> 
+                        Phone number: {{date_purchase.countrycode}} {{date_purchase.tell}}<br/>
+                        Email: {{user.username}}<br/>
+                        Address: {{date_purchase.address}} - {{date_purchase.postcode}} - {{date_purchase.state}} - {{date_purchase.country}}<br/>
+                        Order Number: IN-{{date_purchase.pk}}
+                    </h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Thumbnail</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Thumbnail</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for products in products %}
+                                <tr>
+                                    <td>{{forloop.counter}}</td>
+                                    <td class="text-capitalize">
+                                        {% for all_products in all_products %}
+                                            {% if all_products.pk == products.product_pk %}
+                                                {{all_products.product_name}}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td>{{products.quantity}}</td>
+                                    <td class="">
+                                        {% for all_products in all_products %}
+                                            {% if all_products.pk == products.product_pk %}
+                                                <img src="{{all_products.img}}" height="50" width="50">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+       
+        </div>
+            
+
+
+
+    </div>
+</div>
+
+{% endblock %}

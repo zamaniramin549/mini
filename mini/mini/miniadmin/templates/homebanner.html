@@ -1,0 +1,158 @@
+{% extends 'masteradmin.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<style>
+    .gallery_two img{
+        height: 100px;
+        width: 100px;
+        margin: 10px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Home Banner</h1>
+    </div>
+
+
+    <div class="row justify-content-center">
+
+        <div class="col-md-6">
+
+            {% if msg %}
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                {{msg}}
+            </div>
+            {% endif %}
+            {% if msgw %}
+            <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+                {{msgw}}
+            </div>
+            {% endif %}
+
+
+            <form method="POST" enctype="multipart/form-data" class="card shadow mb-4">{% csrf_token %}
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Add Home Banner</h6>
+                </div>
+                <div class="card-body">
+                    <input type="text" class="form-control mb-3" name="title" placeholder="Title" required>
+                    <input type="text" class="form-control mb-3" name="season" placeholder="Season" required>
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                          <input type="file" name="file" class="custom-file-input" id="gallery-photo-add_two" accept="Image/*" required>
+                          <label class="custom-file-label" for="gallery-photo-add">Banner</label>
+                        </div>
+                    </div>
+
+                    <div class="gallery_two"></div>
+
+                    <button class="btn btn-primary mb-3" name="save_banner">Save</button>
+                </div>
+            </form>
+
+
+
+            {% if get_banners %}
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Banners</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Season</th>
+                                        <th>Banner</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Title</th>
+                                        <th>Season</th>
+                                        <th>Banner</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for get_banners in get_banners %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td class="text-capitalize">{{get_banners.title}}</td>
+                                        <td class="text-capitalize">{{get_banners.season}}</td>
+                                        <td class="text-capitalize"><img src="{{get_banners.banner}}" height="50" width="50"></td>
+                                        <td class="text-center">
+                                            
+                                            <a href="#" class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#deleteModal{{get_banners.pk}}">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                            <!-- Delete -->
+                                            <div class="modal fade" id="deleteModal{{get_banners.pk}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="POST" class="modal-content">{% csrf_token %}
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-capitalize" id="exampleModalLabel">Delete {{get_banners.title}}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                            <div class="modal-body">
+                                                                Are you sure want to delete?
+                                                                <input type="hidden" value="{{get_banners.pk}}" name="banner_pk">
+                                                            </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-danger" name="del_cat">Delete</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
+        </div>
+
+
+
+
+    </div>
+</div>
+
+
+<script>
+    $(function() {
+    // Multiple images preview in browser
+    var imagesPreview = function(input, placeToInsertImagePreview) {
+        if (input.files) {
+            var filesAmount = input.files.length;
+            for (i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                }
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+    };
+    $('#gallery-photo-add_two').on('change', function() {
+        imagesPreview(this, 'div.gallery_two');
+    });
+});
+</script>
+
+{% endblock %}

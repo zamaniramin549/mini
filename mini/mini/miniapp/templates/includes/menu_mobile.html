@@ -1,0 +1,60 @@
+{% load static %}
+<!-- Menu Mobile -->
+<div class="menu-mobile">
+    <ul class="topbar-mobile">
+        <li>
+            <div class="left-top-bar">
+                Mini Hair Care
+            </div>
+        </li>
+
+        <li>
+            <div class="right-top-bar flex-w h-full">
+                <a href="/Q&A" class="flex-c-m p-lr-10 trans-04">
+                    Q&A
+                </a>
+                {% if not request.user.is_authenticated %}
+                    <a href="/loginuser" class="flex-c-m p-lr-10 trans-04">
+                        Login or Register
+                    </a>
+                {% else %}
+                    <a href="/phistory" class="flex-c-m p-lr-10 trans-04">
+                        {{request.user.first_name}} {{request.user.last_name}}
+                    </a>
+
+                    {% if user_info.permission == 'superuser' %}
+                        <a href="/adminpanel" class="flex-c-m p-lr-10 trans-04">
+                            Adminpanel
+                        </a>
+                    {% endif %}
+
+                    <a href="/logoutuser" class="flex-c-m p-lr-10 trans-04">
+                        Log out
+                    </a>
+                {% endif %}
+
+                <a href="#" class="flex-c-m p-lr-10 trans-04">
+                    EN
+                </a>
+
+                <a href="#" class="flex-c-m p-lr-10 trans-04">
+                    MY
+                </a>
+            </div>
+        </li>
+    </ul>
+
+    <ul class="main-menu-m">
+        <li>
+            <a href="/">Home</a>
+        </li>
+
+        <li>
+            <a href="/shop">Shop</a>
+        </li>
+
+        <li>
+            <a href="#">Contact</a>
+        </li>
+    </ul>
+</div>

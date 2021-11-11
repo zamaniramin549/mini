@@ -1,0 +1,147 @@
+{% extends 'masteradmin.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Coupons</h1>
+    </div>
+
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            {% if msg %}
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                {{msg}}
+            </div>
+            {% endif %}
+            {% if msgw %}
+            <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+                {{msgw}}
+            </div>
+            {% endif %}
+
+
+            <form method="POST" class="card shadow mb-4">{% csrf_token %}
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Add Coupon</h6>
+                </div>
+                <div class="card-body">
+                    <input type="text" class="form-control mb-3" name="coupon_name" placeholder="Coupon name" required>
+                    <input type="number" class="form-control mb-3" name="discount" placeholder="Discount base on 'Percentage'" required>
+                    <label for="date">Expiry date</label>
+                    <input type="date" class="form-control mb-3" name="date" placeholder="Expiry date" required>
+                    <button class="btn btn-primary mt-3" name="save_coupon">Save</button>
+                </div>
+            </form>
+
+
+            {% if coupon %}
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Coupons</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Discount</th>
+                                        <th>Expiry date</th>
+                                        <th>Date added</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Name</th>
+                                        <th>Discount</th>
+                                        <th>Expiry date</th>
+                                        <th>Date added</th>
+                                        <th class="text-center">Action</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+                                    {% for coupon in coupon %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td class="">{{coupon.name}}</td>
+                                        <td class="text-capitalize">{{coupon.descount}}</td>
+                                        <td>{{coupon.expiry|naturalday}}</td>
+                                        <td>{{coupon.date|naturalday}}</td>
+                                        <td class="text-center">
+                                            <a href="#" class="btn btn-info btn-circle btn-sm" data-toggle="modal" data-target="#editModal{{coupon.pk}}">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
+                                            <!-- Edit -->
+                                            <div class="modal fade" id="editModal{{coupon.pk}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="POST" class="modal-content">{% csrf_token %}
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Edit {{coupon.name}}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                            <div class="modal-body">
+                                                                <input type="text" class="form-control mb-3" value="{{coupon.name}}" name="coupon_name_2" placeholder="Coupon name" required>
+                                                                <input type="number" class="form-control mb-3" name="discount" value="{{coupon.descount}}" placeholder="Discount base on 'Percentage'" required>
+                                                                <label for="date">Expiry date</label>
+                                                                <input type="date" class="form-control mb-3" value="{{coupon.expiry}}" name="date_2" placeholder="Expiry date">
+                                                                <small>{{coupon.expiry}}</small>
+                                                                <input type="hidden" value="{{coupon.pk}}" name="coupon_pk">
+                                                            </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-primary" name="save_edited_coupon">Save changes</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+
+
+                                            <a href="#" class="btn btn-danger btn-circle btn-sm" data-toggle="modal" data-target="#deleteModal{{coupon.pk}}">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                            <!-- Delete -->
+                                            <div class="modal fade" id="deleteModal{{coupon.pk}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <form method="POST" class="modal-content">{% csrf_token %}
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title text-capitalize" id="exampleModalLabel">Delete {{category.cat_name}}</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                            <div class="modal-body">
+                                                                Are you sure want to delete?
+                                                                <input type="hidden" value="{{coupon.pk}}" name="coupon_pk_del">
+                                                            </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                            <button type="submit" class="btn btn-danger" name="del_coupon">Delete</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

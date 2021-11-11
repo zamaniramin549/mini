@@ -1,0 +1,60 @@
+{% extends 'masteradmin.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Messages</h1>
+    </div>
+
+
+    <div class="row justify-content-center">
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Messages</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Email</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Email</th>
+                                    <th>Date</th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                {% for messages in messages %}
+                                    {% if messages.status == 'unread' %}
+                                        <tr>
+                                            <td class="font-weight-bold"><a href="#" class="text-dark"><small class="text-danger">NEW</small> {{forloop.counter}}</a></td>
+                                            <td class="font-weight-bold"><a href="#" class="text-dark">{{messages.email}}</a></td>
+                                            <td class="font-weight-bold"><a href="#" class="text-dark">{{messages.date|naturalday}}</a></td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td class=""><a href="#" class="text-dark">{{forloop.counter}}</a></td>
+                                            <td class=""><a href="#" class="text-dark">{{messages.email}}</a></td>
+                                            <td class=""><a href="#" class="text-dark">{{messages.date|naturalday}}</a></td>
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

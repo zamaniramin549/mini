@@ -1,0 +1,136 @@
+{% extends 'masteradmin.html' %}
+{% load static %}
+
+
+{% block content %}
+<style>
+    .gallery img{
+        height: 100px;
+        width: 100px;
+        margin: 10px;
+    }
+    .gallery_two img{
+        height: 100px;
+        width: 100px;
+        margin: 10px;
+    }
+</style>
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800 text-capitalize">Edit {{product.product_name}}</h1>
+    </div>
+
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            {% if msg %}
+            <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+                {{msg}}
+            </div>
+            {% endif %}
+            {% if msgw %}
+            <div class="alert alert-warning alert-dismissible fade show mb-4" role="alert">
+                {{msgw}}
+            </div>
+            {% endif %}
+
+
+            <form method="POST" class="card shadow mb-4" enctype="multipart/form-data">{% csrf_token %}
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Edit Product</h6>
+                </div>
+                <div class="card-body">
+
+                    <select class="form-control mb-3 text-capitalize" name="category">
+                        <option value="{{product.cat}}">{{get_cat.cat_name}}</option>
+                        {% for catgory in catgory %}
+                            <option value="{{catgory.pk}}" class="text-capitalize">{{catgory.cat_name}}</option>
+                        {% endfor %}
+                    </select>
+
+                    <input type="text" class="form-control mb-3" value="{{product.product_name}}" name="product_name" placeholder="Product Name*" required>
+
+                    <input type="number" class="form-control mb-3" value="{{product.price}}" name="product_price" placeholder="Price (RM)*" required>
+
+                    <input type="number" min="1" class="form-control mb-3" value="{{product.stuck}}" name="stuck" placeholder="Stuck*" required>
+
+                    <textarea class="form-control mb-3" name="description" placeholder="Product Description*" style="height: 200px;" required>{{product.description}}</textarea>
+
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                          <input type="file" name="thumbnail" class="custom-file-input" id="gallery-photo-add_two" accept="Image/*">
+                          <label class="custom-file-label" for="gallery-photo-add">Choose Thumbnail</label>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery_two">
+                        <img src="{{product.img}}">
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                          <input type="file" name="product_image" class="custom-file-input" id="gallery-photo-add" accept="Image/*" multiple>
+                          <label class="custom-file-label" for="gallery-photo-add">Choose images</label>
+                        </div>
+                    </div>
+
+                    <div class="gallery">
+                        {% for product_img in product_img %}
+                            <img src="{{product_img.image.url}}">
+                            <form method="POST" class="d-inline">{% csrf_token %}
+                                <input type="hidden" name="img_pk" value="{{product_img.pk}}">
+                                <button type="submit" name="del_img" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></button>
+                            </form>
+                        {% endfor %}
+                    </div>
+
+                    <input type="text" value="{{product.video}}" name="video" class="form-control mb-3" placeholder="Video URL">
+
+                    <button class="btn btn-primary mb-3" name="save_product">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    $(function() {
+    // Multiple images preview in browser
+    var imagesPreview = function(input, placeToInsertImagePreview) {
+        if (input.files) {
+            var filesAmount = input.files.length;
+            for (i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                }
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+    };
+    $('#gallery-photo-add').on('change', function() {
+        imagesPreview(this, 'div.gallery');
+    });
+});
+$(function() {
+    // Multiple images preview in browser
+    var imagesPreview = function(input, placeToInsertImagePreview) {
+        if (input.files) {
+            var filesAmount = input.files.length;
+            for (i = 0; i < filesAmount; i++) {
+                var reader = new FileReader();
+                reader.onload = function(event) {
+                    $($.parseHTML('<img>')).attr('src', event.target.result).appendTo(placeToInsertImagePreview);
+                }
+                reader.readAsDataURL(input.files[i]);
+            }
+        }
+    };
+    $('#gallery-photo-add').on('change', function() {
+        imagesPreview(this, 'div.gallery_two');
+    });
+});
+</script>
+{% endblock %}
