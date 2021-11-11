@@ -13,7 +13,7 @@ from .models import *
 from miniadmin.models import *
 # Create your views here.
 
-# Here is the home
+
 def home(request):
 
     try:
